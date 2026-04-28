@@ -24,7 +24,7 @@ contract WillContract{
     }
 
     function deposit() public payable {
-
+        lastPing = block.timestamp;
     }
 
     function transfer() external _recipient{
