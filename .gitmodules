@@ -1,3 +1,6 @@
 [submodule "ProxyStaking/lib/openzeppelin-contracts"]
 	path = ProxyStaking/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "EthEndToEnd/contracts/lib/openzeppelin-contracts"]
+	path = EthEndToEnd/contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts

@@ -7,10 +7,13 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract StakeContract{
     uint public totalSupply;
     address SaqCoin;
+    uint256 public constant REWARD_PER_ETH_PER_SEC = 115740; 
+    uint256 public constant SCALE_FACTOR = 10**18;
 
     constructor(address _SaqCoin){
         SaqCoin = _SaqCoin;
     }
+
     struct userData{
         uint balance;
         uint lastUpdated;
@@ -27,7 +30,8 @@ contract StakeContract{
             return;
         }
 
-        uint256 reward = (block.timestamp - user.lastUpdated) * user.balance;
+        uint256 timeElapsed = block.timestamp - user.lastUpdated;
+        uint256 reward = (timeElapsed * user.balance * REWARD_PER_ETH_PER_SEC) / SCALE_FACTOR;
 
         user.unclaimedReward += reward;
         user.lastUpdated = block.timestamp;
@@ -60,7 +64,8 @@ contract StakeContract{
         data[msg.sender].balance -= _amt;
         totalSupply -= _amt;
 
-        payable(msg.sender).transfer(_amt);
+        (bool success, ) = payable(msg.sender).call{value : _amt}("");
+        require(success);
     }
 
 
@@ -86,7 +91,7 @@ contract StakeContract{
 
         IERC20(SaqCoin).transfer(msg.sender, reward);
 
-        reward = 0;
+        data[msg.sender].unclaimedReward = 0;
         data[msg.sender].lastUpdated = block.timestamp;
     }
     
