@@ -57,12 +57,6 @@ const WalletHeader = () => {
               <Link to="/stake" className="block text-indigo-600 font-semibold">
                 Dashboard
               </Link>
-              <a
-                href="#analytics"
-                className="hover:text-slate-900 transition-colors"
-              >
-                Analytics
-              </a>
             </nav>
           </div>
 

@@ -9,11 +9,13 @@ contract Deploy is Script {
     function run() external {
         uint256 key = vm.envUint("PRIVATE_KEY");
 
+        address saqCoinAddress = 0xC6755F226A5D20efbF80fb200d0c912DC45d21B4;
+       
         vm.startBroadcast(key);
 
-        SaqCoin saqCoin = new SaqCoin(address(0));
+        SaqCoin saqCoin = SaqCoin(saqCoinAddress);
 
-        StakeContract stakeContract = new StakeContract(address(saqCoin));
+        StakeContract stakeContract = new StakeContract(saqCoinAddress);
 
         saqCoin.setStakingContract(address(stakeContract));
 

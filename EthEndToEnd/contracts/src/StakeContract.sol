@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+interface ISaqCoin {
+    function mint(address _to, uint _amt) external;
+}
 
 contract StakeContract{
     uint public totalSupply;
@@ -76,8 +79,12 @@ contract StakeContract{
     {
         userData memory user = data[_user];
 
-        uint256 pendingReward =
-            (block.timestamp - user.lastUpdated) * user.balance;
+        uint256 pendingReward = 0;
+        
+        if (user.lastUpdated > 0) {
+            uint256 timeElapsed = block.timestamp - user.lastUpdated;
+            pendingReward = (timeElapsed * user.balance * REWARD_PER_ETH_PER_SEC) / SCALE_FACTOR;
+        }
 
         return user.unclaimedReward + pendingReward;
     }
@@ -89,7 +96,7 @@ contract StakeContract{
 
         require(reward > 0, "No rewards available");
 
-        IERC20(SaqCoin).transfer(msg.sender, reward);
+        ISaqCoin(SaqCoin).mint(msg.sender, reward);
 
         data[msg.sender].unclaimedReward = 0;
         data[msg.sender].lastUpdated = block.timestamp;
